@@ -1,6 +1,4 @@
-FROM php:8.2-fpm
-
-WORKDIR /var/www/html
+FROM php:8.3-fpm
 
 RUN apt-get update && apt-get install -y \
     libpng-dev \
@@ -17,9 +15,3 @@ RUN apt-get update && apt-get install -y \
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-
-COPY . /var/www/html
-RUN chmod -R 777 /var/www/html/storage /var/www/html/bootstrap/cache
-EXPOSE 9000
-
-CMD ["php-fpm"]
