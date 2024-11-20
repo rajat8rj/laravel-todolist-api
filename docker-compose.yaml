@@ -24,6 +24,9 @@ services:
             - REDIS_HOST=redis
             - REDIS_PASSWORD=null
             - REDIS_PORT=6379
+            - AWS_ACCESS_KEY_ID= accesskey
+            - AWS_SECRET_ACCESS_KEY= secretkey
+            - AWS_BUCKET= laravel-bucket
 
     db:
         image: mysql:8.0
@@ -59,9 +62,24 @@ services:
         depends_on:
             - app
 
+    minio:
+      image: bitnami/minio:2024
+      container_name: laravel-minio
+      environment:
+        MINIO_ACCESS_KEY: accesskey
+        MINIO_SECRET_KEY: secretkey
+      volumes:
+        - minio_data:/data
+      ports:
+        - 9000:9000
+      command: server /data
+      networks:
+        - app-network
+
 networks:
     app-network:
         driver: bridge
 
 volumes:
     db_data:
+    minio_data:
