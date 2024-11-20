@@ -1,0 +1,3 @@
+php-app: "--mem 2G --cpus 2 --disk 5G 20.04"
+redis: "--mem 1G --cpus 1 --disk 5G 20.04"
+mysql: "--mem 2G --cpus 2 --disk 10G 20.04"
