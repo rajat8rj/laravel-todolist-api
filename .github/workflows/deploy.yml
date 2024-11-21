@@ -40,7 +40,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_SERVER << 'EOF'
             cd $DEPLOY_PATH
             cp .env.example .env
-            curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+            composer install --no-dev --optimize-autoloader
             php /var/www/html/artisan key:generate
             php /var/www/html/artisan migrate --force
             # php artisan config:cache
