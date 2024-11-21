@@ -38,7 +38,7 @@ jobs:
           # SSH into the server and run commands
           # SSH into the server and run commands
           ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_SERVER << 'EOF'
-            cd $DEPLOY_PATH
+            cd /var/www/html
             cp .env.example .env
             composer install --no-dev --optimize-autoloader
             php artisan key:generate
