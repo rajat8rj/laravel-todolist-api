@@ -41,13 +41,9 @@ jobs:
           DEPLOY_SERVER: ${{ secrets.DEPLOY_SERVER }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
         run: |
-          mkdir -p ~/.ssh
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H $DEPLOY_SERVER >> ~/.ssh/known_hosts
 
           # Sync code to the server
-          rsync -avz --exclude='.git*' --exclude='node_modules' --exclude='.env' ./ $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH
+          rsync -avz --exclude='.git*' --exclude='node_modules' --exclude='.env' -e "ssh -i $SSH_PRIVATE_KEY" ./ $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH
 
           # SSH into the server and run commands
           ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_SERVER << 'EOF'
