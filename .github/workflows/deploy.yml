@@ -13,8 +13,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Copy .env
-        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
 
       # - name: Set up PHP
       #   uses: shivammathur/setup-php@v2
@@ -43,11 +41,12 @@ jobs:
         run: |
 
           # Sync code to the server
-          rsync -avz --exclude='.git*' --exclude='node_modules' --exclude='.env' -e "ssh -i $SSH_PRIVATE_KEY" ./ $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH
+          rsync -avz --exclude='.git*' --exclude='node_modules' --exclude='.env' -e "ssh -i" $SSH_PRIVATE_KEY ./ $DEPLOY_USER@$DEPLOY_SERVER:$DEPLOY_PATH
 
           # SSH into the server and run commands
           ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_SERVER << 'EOF'
             cd $DEPLOY_PATH
+            cp .env.example .env
             composer install --no-dev --optimize-autoloader
             php artisan key:generate
             php artisan migrate --force
