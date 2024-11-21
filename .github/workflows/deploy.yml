@@ -16,10 +16,10 @@ jobs:
       - name: Copy .env
         run: php -r "file_exists('.env') || copy('.env.example', '.env');"
 
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.3'  # Use the PHP version compatible with your Laravel app
+      # - name: Set up PHP
+      #   uses: shivammathur/setup-php@v2
+      #   with:
+      #     php-version: '8.3'  # Use the PHP version compatible with your Laravel app
 
       - name: Cache Composer dependencies
         uses: actions/cache@v3
@@ -53,6 +53,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_SERVER << 'EOF'
             cd $DEPLOY_PATH
             composer install --no-dev --optimize-autoloader
+            php artisan key:generate
             php artisan migrate --force
             php artisan config:cache
             php artisan route:cache
