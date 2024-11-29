@@ -15,7 +15,7 @@
     state: absent
 - name: Create cloud-init file inserting the public key
   template:
-    src: cloud-init-template.j2
+    src: templates/cloud-init-template.j2
     dest: cloud-init.yaml
   delegate_to: localhost
   vars:

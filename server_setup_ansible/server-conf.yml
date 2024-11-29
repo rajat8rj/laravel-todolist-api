@@ -1,7 +1,6 @@
 ---
-
 - name: Setup Web Server Laravel
-  hosts: app
+  hosts: localhost
   become: true
   vars:
     php_version: "8.3"
@@ -10,17 +9,21 @@
    - name: Update apt package list
      apt:
       update_cache: yes
+     tags: ini-setup
 
    - name: Install prerequisites for PHP repository
      apt:
       name: software-properties-common
       state: present
+     tags: ini-setup
 
    - name: Add PHP PPA
      apt_repository:
       repo: ppa:ondrej/php
       state: present
       update_cache: yes
+     tags: ini-setup
+
 
    - name: Install PHP, PHP-FPM, Nginx, MySQL, Redis, Composer, and required PHP extensions
      apt:
@@ -37,11 +40,14 @@
         - nginx
         - composer
       state: present
+     tags: ini-setup
+
 
    - name: Install Python MySQL client library
      apt:
       name: python3-pymysql
       state: present
+     tags: ini-setup
 
    - name: Copy the nginx.conf from template
      template:
@@ -50,8 +56,6 @@
        owner: root
        group: root
        mode: '0644'
-     notify:
-       - Restart nginx
 
    - name: Restart PHP-FPM and Nginx to apply changes
      service:
@@ -63,9 +67,11 @@
 
    - name: Configure github runner
      command: sh scripts/configure_github-self-runner.sh
+     tags: git-runner
 
    - name: Configure github runner
      command: sh scripts/install_github-self-runner.sh
+     tags: git-runner
 
 - name: Setup mysql server
   hosts: db
@@ -81,17 +87,20 @@
     - name: Update apt package list
       apt:
         update_cache: yes
+      tags: ini-setup
 
     - name: Install Python MySQL client library
       apt:
         name: python3-pymysql
         state: present
+      tags: ini-setup
 
     - name: Install mysql
       apt:
         name:
           - mysql-server
         state: present
+      tags: ini-setup
 
     - name: Ensure MySQL service is running and enabled
       service:
@@ -108,6 +117,7 @@
         login_unix_socket: /var/run/mysqld/mysqld.sock
         state: present
       notify: Restart MySQL
+      tags: ini-setup
 
     - name: Create MySQL database
       mysql_db:
@@ -115,6 +125,7 @@
         state: present
         login_user: vmadmin
         login_password: "{{ mysql_root_password }}"
+      tags: ini-setup
 
     - name: Create MySQL user with all privileges
       mysql_user:
@@ -125,6 +136,7 @@
         state: present
         login_user: vmadmin
         login_password: "{{ mysql_root_password }}"
+      tags: ini-setup
 
   handlers:
     - name: Restart MySQL
@@ -140,12 +152,14 @@
     - name: Update apt package list
       apt:
         update_cache: yes
+      tags: ini-setup
 
     - name: Install redis
       apt:
         name:
           - redis-server
         state: present
+      tags: ini-setup
 
     - name: Ensure redis service is running and enabled
       service:

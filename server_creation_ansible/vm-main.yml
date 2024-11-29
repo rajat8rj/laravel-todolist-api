@@ -5,7 +5,7 @@
   tasks:
     - name: Read VM configuration from file
       include_vars:
-        file: vm.yml
+        file: vars/vm.yml
         name: vms
     - name: Create keypair and cloud-init
       include_tasks: create-keys-and-cloudinit.yml
