@@ -67,11 +67,11 @@
 
    - name: Configure github runner
      command: sh scripts/configure_github-self-runner.sh
-     tags: git-runner
+     tags: ini-setup
 
    - name: Configure github runner
      command: sh scripts/install_github-self-runner.sh
-     tags: git-runner
+     tags: ini-setup
 
 - name: Setup mysql server
   hosts: db
