@@ -65,12 +65,24 @@
       - "php{{ php_version }}-fpm"
       - nginx
 
-   - name: Configure github runner
-     command: sh scripts/configure_github-self-runner.sh
-     tags: ini-setup
+   - name: Copy shell configure_github-self-runner.sh to remote server
+     copy:
+       src: scripts/configure_github-self-runner.sh
+       dest: /tmp/configure_github-self-runner.sh
+       mode: 0755
 
    - name: Configure github runner
-     command: sh scripts/install_github-self-runner.sh
+     command: sh /tmp/configure_github-self-runner.sh
+     tags: ini-setup
+
+   - name: Copy shell install_github-self-runner.sh to remote server
+     copy:
+       src: scripts/install_github-self-runner.sh
+       dest: /tmp/install_github-self-runner.sh
+       mode: 0755
+
+   - name: Configure github runner
+     command: sh /tmp/install_github-self-runner.sh
      tags: ini-setup
 
 - name: Setup mysql server
